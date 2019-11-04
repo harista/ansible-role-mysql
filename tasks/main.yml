@@ -1,0 +1,33 @@
+---
+# tasks file for mysql_db
+
+    -
+        name: Install MySQL databases
+        apt: name='{{ item }}' state=installed
+        with_items:
+            -  mysql-server
+            -  mysql-client
+
+
+    -
+        name: Start MySQL service
+        service:
+          name: mysql
+          state: started
+          enabled: yes
+    -   name: Install mysql python
+        shell: pip install MySQL-python 
+
+    -
+        name: Create application Database
+        mysql_db:
+          name: '{{ db_name }}'
+          state: present
+    -
+        name: Create user
+        mysql_user:
+          name: '{{ db_user }}'
+          password: '{{ db_user_password }}'
+          priv: '*.*:ALL'
+          state: 'present'
+          host: '%'
